@@ -1,4 +1,5 @@
 import requests
+import urllib
 from bs4 import BeautifulSoup
 import os
 import re
@@ -50,7 +51,10 @@ def getBookInfo(url):
             staffList.append(point.find('td').find_next_sibling().get_text())
         else:
             break
-    formResult(infoDict,circleList,staffList)
+    cover=html.findAll('img',alt='cover')
+    if(cover!=None):
+        coverSrc=cover[0].get('src')
+    formResult(infoDict,circleList,staffList,coverSrc)
 
 def getCircleAll(url):
     html=getHTMLText(url)
@@ -70,7 +74,7 @@ def getCircleAll(url):
             if each.find(string='Touhou Project')!=None:
                 getBookInfo("https://www.doujinshi.org"+each.find_parent().find('a').get('href'))
 
-def formResult(infoDict,circleList,staffList):
+def formResult(infoDict,circleList,staffList,coverSrc=None):
     result="{{同人志头部}}\n\n== 作品信息 ==\n{{同人志信息|\n| 封面 = {{PAGENAME}}封面.jpg\n| 封面角色 = \n| 名称 = [ORIGINALTITLE]\n| 译名 = \n| 制作方 = [CIRCLES]\n| 类型 = [TYPE]\n| 展会 = [CONVENTION]\n| 年龄限制 = [AGELIMIT]\n| 尺寸 = [SCALE]\n| 页数 = [PAGES]\n| 编号 = \n| 登场人物 = \n| 售价 = \n| 官网页面 = \n|\n}}\n\n== Staff ==\n[STAFF]\n== 评论 ==\n\n{{Bottom}}"
     title=infoDict['Original title:']
     result=result.replace('[ORIGINALTITLE]',title)
@@ -89,7 +93,13 @@ def formResult(infoDict,circleList,staffList):
     result=result.replace('[STAFF]',staff)
     writeToFile(result,path,infoDict['Released:']+'__'+validateTitle(title))
     print(title)
+    saveCover(path,title,coverSrc)#comment out this line to disable save doujinshi cover
 
+def saveCover(path,title,coverSrc=None):
+    if(coverSrc!=None):
+        #print(coverSrc)
+        urllib.request.urlretrieve('https:'+coverSrc,"%s%s封面.jpg"%(path,validateTitle(title)))
+        
 path='./'
 #getBookInfo("https://www.doujinshi.org/book/17221/")
 #getCircleAll("https://www.doujinshi.org/browse/circle/1974/")
