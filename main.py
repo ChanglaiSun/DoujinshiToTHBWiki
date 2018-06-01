@@ -93,12 +93,12 @@ def formResult(infoDict,circleList,staffList,coverSrc=None):
     result=result.replace('[STAFF]',staff)
     writeToFile(result,path,infoDict['Released:']+'__'+validateTitle(title))
     print(title)
-    saveCover(path,title,coverSrc)#comment out this line to disable save doujinshi cover
+    saveCover(path,title,infoDict['Released:'],coverSrc)#comment out this line to disable save doujinshi cover
 
-def saveCover(path,title,coverSrc=None):
+def saveCover(path,title,releaseDate,coverSrc=None):
     if(coverSrc!=None):
         #print(coverSrc)
-        urllib.request.urlretrieve('https:'+coverSrc,"%s%s封面.jpg"%(path,validateTitle(title)))
+        urllib.request.urlretrieve('https:'+coverSrc,"%s%s__%s封面.jpg"%(path,releaseDate,validateTitle(title)))
         
 path='./'
 #getBookInfo("https://www.doujinshi.org/book/17221/")
