@@ -40,8 +40,10 @@ def getBookInfo(url):
         key = kv[0].get_text()
         value = kv[1].get_text()
         infoDict[key] = value
-    circleListStr = ','.join(i.get_text() for i in mainTable.find_all('a', href=re.compile(r'^/browse/circle')) if i.get_text())
-    staffList = [i.get_text() for i in mainTable.find_all('a', href=re.compile(r'^/browse/author')) if i.get_text()]
+    circleListStr = ','.join(i.get_text() for i in mainTable.find_all('a', href=re.compile(r'^/browse/circle'))
+                             if i.get_text() and not i.parent.find('img'))
+    staffList = [i.get_text() for i in mainTable.find_all('a', href=re.compile(r'^/browse/author'))
+                 if i.get_text() and not i.parent.find('img')]
     cover = html.find('img', alt='cover')
     coverSrc = cover['src'] if cover else ''
     formResult(infoDict, circleListStr, staffList, coverSrc)
