@@ -79,7 +79,7 @@ def formResult(infoDict, circleListStr, staffList, coverSrc=None):
 
 == 作品信息 ==
 {{{{同人志信息|
-| 封面 = {{{{PAGENAME}}}}封面.jpg
+| 封面 = jpg
 | 封面角色 =
 | 名称 = {title}
 | 译名 =
